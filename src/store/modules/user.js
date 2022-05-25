@@ -1,8 +1,7 @@
 import {
   getInfo,
   logout,
-  login,
-  getConfig
+  login
 } from '@/api/account'
 import {
   resetRouter
@@ -10,8 +9,7 @@ import {
 
 import {
   setToken,
-  removeToken,
-  setGlobal
+  removeToken
 } from '@/utils/global'
 
 const state = {
@@ -23,20 +21,19 @@ const state = {
   LoginAt: undefined,
   LoginIP: undefined,
   Token: undefined,
-  GroupID: undefined
+  RoleID: undefined
 }
 
 const mutations = {
   SET_USER: (state, info) => {
     state.NickName = info.NickName
-    state.Face = info.Face || 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
-    state.UserName = info.Name
+    state.Face = info.Face
+    state.UserName = info.AdminName
     state.Code = info.Code
-    state.RoleName = info.RoleName
     state.CreateAt = info.CreateAt
     state.LoginAt = info.LoginAt
     state.LoginIP = info.LoginIP
-    state.GroupID = info.GroupID
+    state.RoleID = info.RoleID
     state.Menus = info.Menus
   },
   SET_TOKEN: (state, token) => {
@@ -54,27 +51,15 @@ const actions = {
         if (!res.success) {
           reject(res.msg)
         }
-        setToken(res.info.Token)
-        commit('SET_TOKEN', res.info.Token)
-        resolve()
+        setToken(res.info.access_token)
+        commit('SET_TOKEN', res.info.access_token)
+        if (res.info.Password) {
+          resolve(res)
+        } else {
+          resolve(res)
+        }
       }).catch(err => {
         reject(err)
-      })
-    })
-  },
-  // 初始化配置
-  getConfig({
-    commit
-  }) {
-    return new Promise((resolve, reject) => {
-      getConfig().then(res => {
-        if (!res.success) {
-          reject('初始化错误')
-        }
-        setGlobal(res.info)
-        resolve(res.info)
-      }).catch(error => {
-        reject(error)
       })
     })
   },
@@ -88,9 +73,8 @@ const actions = {
           reject('验证失败，请重新登录')
         }
         commit('SET_USER', res.info)
-        console.log(status)
         if (!document.getElementById('check-permission')) {
-          const permissionStyle = res.info.Permission.map(item => `.permission[check-permission="${item}"]`).join(',') + '{display:block;}'
+          const permissionStyle = res.info.Permissions.map(item => `.permission[check-permission="${item}"]`).join(',') + '{display:block;}'
           const style = document.createElement('style')
           style.type = 'text/css'
           style.id = 'check-permission'
@@ -113,7 +97,11 @@ const actions = {
         commit('SET_TOKEN', '')
         resetRouter()
         removeToken()
-        commit('SET_USER', {})
+        commit('SET_USER', {
+          Site: {
+            Type: ''
+          }
+        })
         resolve()
       }).catch(error => {
         reject(error)

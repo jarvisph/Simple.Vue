@@ -1,5 +1,5 @@
 module.exports = {
-  title: '管理后台模板',
+  title: 'Simple微服务组件后台',
 
   /**
    * @type {boolean} true | false

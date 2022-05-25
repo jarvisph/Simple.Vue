@@ -31,8 +31,6 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
-          // 初始化系统参数
-          await store.dispatch('user/getConfig')
           // 获取会员信息
           var user = await store.dispatch('user/getInfo')
           // 动态挂载路由

@@ -103,7 +103,7 @@ export default {
           }
         },
         legend: {
-          data: ['~电竞数据~', '~小游戏数据~', '~主播数据~']
+          data: ['~电竞数据~', '~小游戏数据~', '~主播数据~', '~虚拟电竞数据~']
         },
         series: [
           {
@@ -160,6 +160,26 @@ export default {
               }
             },
             data: Anchor,
+            animationDuration: 2800,
+            animationEasing: 'quadraticOut'
+          },
+          {
+            name: '~虚拟电竞数据~',
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              normal: {
+                color: '#13c2c2',
+                lineStyle: {
+                  color: '#13c2c2',
+                  width: 2
+                },
+                areaStyle: {
+                  color: '#f3f8ff'
+                }
+              }
+            },
+            data: VisualSport,
             animationDuration: 2800,
             animationEasing: 'quadraticOut'
           }

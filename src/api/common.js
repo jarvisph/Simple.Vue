@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+import qs from 'query-string'
 export function upload(url, data) {
   return request({
     url: url,
@@ -11,17 +11,12 @@ export function upload(url, data) {
   })
 }
 export function form(url, data, method = 'post') {
-  const formData = new FormData()
-  for (var item in data) {
-    if (data[item] === undefined || data[item] === null) continue
-    formData.append(item, data[item])
-  }
   return request({
     url: url,
     method: method,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     },
-    data: formData
+    data: qs.stringify(data)
   })
 }

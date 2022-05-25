@@ -6,7 +6,8 @@ const {
   fixedHeader,
   sidebarLogo,
   qrcode,
-  upload
+  upload,
+  title
 } = defaultSettings
 
 const state = {
@@ -16,6 +17,7 @@ const state = {
   fixedHeader: fixedHeader,
   sidebarLogo: sidebarLogo,
   qrcode: qrcode,
+  title: title,
   upload: upload
 }
 

@@ -13,6 +13,7 @@
           ? 'am-icon-edit'
           : btn.icon
     "
+    :title="btn.title"
     class="table-mini-btn"
     :type="btn.type === 'delete' ? 'danger' : btn.type || 'primary'"
     @click="
@@ -25,7 +26,7 @@
           )
         : btn.event(scope.row, item)
     "
-  >&nbsp;{{ btn.title }}</el-button>
+  >&nbsp;{{ btn.icon === undefined ? btn.title : "" }}</el-button>
 </template>
 <script>
 import { form } from '@/api/common'

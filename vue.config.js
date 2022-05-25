@@ -5,17 +5,7 @@ const defaultSettings = require('./src/settings.js')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-
-const name = defaultSettings.title || 'vue Element Admin' // page title
-
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following method:
-// port = 9527 npm run dev OR npm run dev --port = 9527
-const port = process.env.port || process.env.npm_config_port || 9527 // dev port
-
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
+const port = 9315 
 module.exports = {
   /**
    * You will need to set publicPath if you plan to deploy your site under a sub path,
@@ -26,7 +16,8 @@ module.exports = {
    */
   publicPath: '/',
   outputDir: 'dist',
-  assetsDir: 'static',
+  assetsDir: '',
+  filenameHashing: false,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
@@ -37,30 +28,34 @@ module.exports = {
       errors: true
     },
     proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      ["/account"]: {
-        target: `http://127.0.0.1:6003`,
-        changeOrigin: false,
+      ["^/auth"]: {
+        target: `http://localhost:5000`,
+        changeOrigin: true,
         pathRewrite: {
-          [process.env.VUE_APP_BASE_API]: ''
+          '^/auth': ''
         }
       },
-      // signalr 服务器
-      [process.env.VUE_APP_BASE_HUB_API]: {
-        target: `http://127.0.0.1:6005`,
-        changeOrigin: false,
+      ["^/signalr"]: {
+        target: `http://localhost:5001`,
+        changeOrigin: true,
         pathRewrite: {
-          ['^hub/' + process.env.VUE_APP_BASE_HUB_API]: ''
+          "^/signalr": ''
         }
-      }
+      },
+      ["^/translate"]: {
+        target: `http://localhost:5002`,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/translate": 'translate'
+        }
+      },
     },
     // after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
-    name: name,
+    name: defaultSettings.title ,
     resolve: {
       alias: {
         '@': resolve('src')
@@ -76,6 +71,8 @@ module.exports = {
       .rule('svg')
       .exclude.add(resolve('src/icons'))
       .end()
+
+
     config.module
       .rule('icons')
       .test(/\.svg$/)
@@ -87,7 +84,6 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
-
     // set preserveWhitespace
     config.module
       .rule('vue')
@@ -100,7 +96,6 @@ module.exports = {
       .end()
 
     config
-      // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('eval-source-map')
       )
@@ -121,18 +116,23 @@ module.exports = {
               chunks: 'all',
               cacheGroups: {
                 libs: {
-                  name: 'chunk-libs',
+                  name: 'libs',
                   test: /[\\/]node_modules[\\/]/,
                   priority: 10,
                   chunks: 'initial' // only package third parties that are initially dependent
                 },
                 elementUI: {
-                  name: 'chunk-elementUI', // split elementUI into a single package
+                  name: 'elementUI', // split elementUI into a single package
                   priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
                   test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
                 },
+                vendors: {
+                  name: 'vendor',
+                  test: /[\\/]node_modules[\\/]/,
+                  priority: 10
+                },
                 commons: {
-                  name: 'chunk-commons',
+                  name: 'chunk',
                   test: resolve('src/components'), // can customize your rules
                   minChunks: 3, //  minimum common number
                   priority: 5,

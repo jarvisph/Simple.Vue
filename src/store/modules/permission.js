@@ -10,27 +10,25 @@ import Layout from '@/layout'
  */
 export function filterAsyncRoutes(routes) {
   const res = []
-
   routes.forEach(route => {
-    if (!route.ID) {
+    if (!route.Name) {
       return
     }
-    // resolve => require([`@/views${route.Href}`], resolve)
     const tmp = {
-      name: route.ID,
-      path: route.Href || route.ID,
+      name: route.Name,
+      path: route.Meta.href || route.Name,
       alwaysShow: false,
-      component: route.Href ? resolve => require.ensure([], () => resolve(require(`@/views${route.Href}`)), 'admin') : Layout,
+      component: route.Meta.href ? resolve => require.ensure([], () => resolve(require(`@/views${route.Meta.href}`)), 'admin') : Layout,
       hidden: route.hidden || false,
       meta: {
-        title: route.Name,
-        icon: route.Icon,
+        title: route.DisplayName,
+        icon: route.icon,
         noCache: route.noCache || false
         // activeMenu: route.activeMenu
       }
     }
-    if (route.menu) {
-      tmp.children = filterAsyncRoutes(route.menu)
+    if (route.Children) {
+      tmp.children = filterAsyncRoutes(route.Children)
     }
     res.push(tmp)
   })

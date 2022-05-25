@@ -35,27 +35,27 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: '/redirect/:path*',
-    component: () => import(/* webpackChunkName: "index" */'@/views/redirect/index')
+    component: () => import(/* webpackChunkName: "index" */ '@/views/redirect/index')
   }]
 },
 {
   path: '/login',
-  component: () => import(/* webpackChunkName: "index" */'@/views/login/index'),
+  component: () => import(/* webpackChunkName: "index" */ '@/views/login/index'),
   hidden: true
 },
 {
   path: '/auth-redirect',
-  component: () => import(/* webpackChunkName: "index" */'@/views/login/auth-redirect'),
+  component: () => import(/* webpackChunkName: "index" */ '@/views/login/auth-redirect'),
   hidden: true
 },
 {
   path: '/404',
-  component: () => import(/* webpackChunkName: "index" */'@/views/error-page/404'),
+  component: () => import(/* webpackChunkName: "index" */ '@/views/error-page/404'),
   hidden: true
 },
 {
   path: '/401',
-  component: () => import(/* webpackChunkName: "index" */'@/views/error-page/401'),
+  component: () => import(/* webpackChunkName: "index" */ '@/views/error-page/401'),
   hidden: true
 },
 
@@ -66,10 +66,10 @@ export const constantRoutes = [{
   hidden: true,
   children: [{
     path: 'index',
-    component: () => import(/* webpackChunkName: "index" */'@/views/profile/index'),
+    component: () => import(/* webpackChunkName: "index" */ '@/views/profile/index'),
     name: 'Profile',
     meta: {
-      title: '~个人中心~',
+      title: '个人中心',
       noCache: true
     }
   }]
@@ -80,14 +80,93 @@ export const constantRoutes = [{
   redirect: '/dashboard',
   children: [{
     path: 'dashboard',
-    component: () => import(/* webpackChunkName: "index" */'@/views/dashboard/index'),
+    component: () => import(/* webpackChunkName: "index" */ '@/views/dashboard/index'),
     name: 'Dashboard',
     meta: {
-      title: '~主页~',
+      title: '主页',
       icon: 'am-icon-tachometer',
       affix: true
     }
   }]
+},
+{
+  name: 'SignalR',
+  path: '/signalr',
+  alwaysShow: false,
+  component: Layout,
+  hidden: false,
+  meta: {
+    title: 'WebSocket',
+    icon: ''
+  },
+  children: [{
+    name: 'SignalR.Application',
+    path: '/signalr/application',
+    alwaysShow: false,
+    component: () => import('@/views/signalr/application'),
+    hidden: false,
+    meta: {
+      title: '应用程序',
+      icon: ''
+    }
+  },
+  {
+    name: 'SignalR.Connection',
+    path: '/signalr/connection',
+    alwaysShow: false,
+    component: () => import('@/views/signalr/connection'),
+    hidden: false,
+    meta: {
+      title: '连接日志',
+      icon: ''
+    }
+  },
+  {
+    name: 'SignalR.Push',
+    path: '/signalr/push',
+    alwaysShow: false,
+    component: () => import('@/views/signalr/push'),
+    hidden: false,
+    meta: {
+      title: '推送日志',
+      icon: ''
+    }
+  }
+  ]
+},
+{
+  name: 'Translate',
+  path: '/translate',
+  alwaysShow: false,
+  component: Layout,
+  hidden: false,
+  meta: {
+    title: '翻译管理',
+    icon: ''
+  },
+  children: [{
+    name: 'Translate.Channel',
+    path: '/translate/channel',
+    alwaysShow: false,
+    component: () => import('@/views/translate/channel'),
+    hidden: false,
+    meta: {
+      title: '频道管理',
+      icon: ''
+    }
+  },
+  {
+    name: 'Translate.Content',
+    path: '/translate/content',
+    alwaysShow: false,
+    component: () => import('@/views/translate/content'),
+    hidden: false,
+    meta: {
+      title: '翻译内容',
+      icon: ''
+    }
+  }
+  ]
 }
 ]
 

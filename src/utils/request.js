@@ -12,7 +12,7 @@ import {
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // 请求前缀
   withCredentials: false, //  allow is Cookie
-  timeout: 10000 // timeout
+  timeout: 60000 // timeout
 })
 
 // request interceptors
@@ -36,11 +36,21 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     var res = response.data
+    // 文件类型，直接返回二进制文件流
+    if (res.toString() === '[object Blob]') {
+      return res
+    }
     if (res.success) {
       return res
     } else {
+      let errorMessage = res.msg
+      if (res.info) {
+        if (res.info.Tip) {
+          errorMessage += res.info.Tip
+        }
+      }
       Message({
-        message: res.msg || 'Error',
+        message: errorMessage || 'Error',
         type: 'error',
         duration: 5 * 1000
       })

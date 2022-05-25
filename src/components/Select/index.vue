@@ -7,7 +7,7 @@
   >
     <template v-if="enumname">
       <el-option
-        v-for="(label, key) in $global.Enum[enumname]"
+        v-for="(label, key) in getenums()"
         :key="key"
         :label="label"
         :value="key"
@@ -15,7 +15,7 @@
     </template>
     <template v-else-if="dictionary">
       <el-option
-        v-for="(label, key) in dictionary"
+        v-for="(label, key) in getdictionary()"
         :key="key"
         :label="label"
         :value="key"
@@ -88,6 +88,20 @@ export default {
   methods: {
     change() {
       this.$emit('change', this.svalue)
+    },
+    getenums() {
+      if (this.$global.Enum) {
+        return this.$global.Enum[this.enumname]
+      } else {
+        return []
+      }
+    },
+    getdictionary() {
+      if (this.dictionary) {
+        return this.dictionary
+      } else {
+        return {}
+      }
     }
   }
 }

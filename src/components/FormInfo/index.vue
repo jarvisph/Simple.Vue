@@ -27,7 +27,9 @@ import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 export default {
   name: 'FromInfo',
-  directives: { elDragDialog },
+  directives: {
+    elDragDialog
+  },
   props: {
     visible: {
       type: Boolean,
@@ -65,8 +67,12 @@ export default {
   },
   methods: {
     submit: function() {
+      var noSubmit
+      this.$emit('submit', this.model, callback => {
+        noSubmit = callback
+      })
+      if (noSubmit === false) return
       this.loading = true
-      this.$emit('submit', this.model)
       if (this.action) {
         this.$form(this.action, this.model)
           .then((res) => {
@@ -90,4 +96,5 @@ export default {
     }
   }
 }
+
 </script>

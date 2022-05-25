@@ -5,7 +5,7 @@
       :key="item.type"
       :xs="12"
       :sm="12"
-      :lg="8"
+      :lg="6"
       class="card-panel-col"
     >
       <div class="card-panel">
@@ -104,6 +104,15 @@ export default {
         {
           title: '~主播数据~',
           type: 'Anchor',
+          Interval: 'Day',
+          BetMoney: 0,
+          BetAmount: 0,
+          BetProfit: 0,
+          BetCount: 0
+        },
+        {
+          title: '~虚拟电竞数据~',
+          type: 'VisualSport',
           Interval: 'Day',
           BetMoney: 0,
           BetAmount: 0,

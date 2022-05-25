@@ -3,23 +3,17 @@
     <div v-if="search" class="filter-container">
       <el-form ref="searchForm">
         <slot name="search" />
-        <el-button
-          v-waves
-          class="filter-item"
-          type="primary"
-          size="mini"
-          icon="el-icon-search"
-          @click="reload"
-        >~搜索~</el-button>
+        <el-button v-waves class="filter-item" type="primary" size="mini" icon="el-icon-search" @click="reload()">搜索
+        </el-button>
         <button
           v-waves
           style="height: 29px"
           size="mini"
           class="el-button filter-item el-button--mini"
           type="reset"
-          @click="options.where = {}"
+          @click="reset()"
         >
-          ~重 置~
+          重 置
         </button>
       </el-form>
     </div>
@@ -27,13 +21,11 @@
       <div v-if="options.title" class="table-title">
         <h3>
           {{ options.title }}
-          <span
-            v-if="page"
-          >&nbsp;&nbsp;<i
+          <span v-if="page">&nbsp;&nbsp;<i
             class="el-icon-refresh"
             title="~刷新~"
             style="cursor: pointer"
-            @click="reload"
+            @click="reload()"
           /></span>
         </h3>
       </div>
@@ -49,7 +41,7 @@
       </div>
       <el-table
         v-loading="loading"
-        element-loading-text="~拼命加载中~"
+        element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)"
         :data="options.url ? list : data"
@@ -62,12 +54,7 @@
       >
         <template v-for="(item, index) in options.cols">
           <template v-if="item.type === 'checkbox'">
-            <el-table-column
-              :key="item.type"
-              type="selection"
-              :width="item.width"
-              :align="item.align || 'center'"
-            />
+            <el-table-column :key="item.type" type="selection" :width="item.width" :align="item.align || 'center'" />
           </template>
           <template v-else>
             <el-table-column
@@ -77,22 +64,13 @@
               :width="item.width"
               :type="item.type"
               :align="item.align || 'center'"
-              :sortable="item.sortable"
+              :sortable="item.sort"
             >
               <!--自定义header头-->
               <template slot="header">
                 {{ item.title }}
-                <el-tooltip
-                  v-if="item.tip"
-                  class="item"
-                  effect="dark"
-                  :content="item.tip"
-                  placement="top"
-                >
-                  <a
-                    href="javascript:void(0)"
-                    class="am-icon-question-circle-o"
-                  />
+                <el-tooltip v-if="item.tip" class="item" effect="dark" :content="item.tip" placement="top">
+                  <a href="javascript:void(0)" class="am-icon-question-circle-o" />
                 </el-tooltip>
               </template>
               <!--嵌套header头-->
@@ -103,13 +81,11 @@
                     :prop="childItem.name"
                     :label="childItem.title"
                     :align="childItem.align || 'center'"
+                    :sortable="childItem.sort"
                   >
                     <template slot-scope="scope">
                       <!--html模版-->
-                      <div
-                        v-if="childItem.template"
-                        v-html="childItem.template(scope.row, item)"
-                      />
+                      <div v-if="childItem.template" v-html="childItem.template(scope.row, item)" />
                       <div v-else>{{ scope.row[childItem.name] }}</div>
                     </template>
                   </el-table-column>
@@ -153,10 +129,7 @@
                   </template>
                 </template>
                 <!--html模版-->
-                <div
-                  v-else-if="item.template"
-                  v-html="item.template(scope.row, item)"
-                />
+                <div v-else-if="item.template" v-html="item.template(scope.row, item)" />
                 <!--vue模版-->
                 <el-slot
                   v-else-if="item.render"
@@ -189,16 +162,9 @@
         <template v-for="(item, index) in options.cols">
           <template v-if="item.cols">
             <template v-for="childItem in item.cols">
-              <el-table-column
-                :key="childItem.name"
-                :width="childItem.width"
-                :align="childItem.align || 'center'"
-              >
+              <el-table-column :key="childItem.name" :width="childItem.width" :align="childItem.align || 'center'">
                 <template slot-scope="scope">
-                  <div
-                    v-if="childItem.total"
-                    v-html="childItem.total(scope.row, item)"
-                  />
+                  <div v-if="childItem.total" v-html="childItem.total(scope.row, item)" />
                 </template>
               </el-table-column>
             </template>
@@ -211,10 +177,7 @@
           >
             <template slot-scope="scope">
               <div v-if="index === 0">~统计~</div>
-              <div
-                v-else-if="item.total"
-                v-html="item.total(scope.row, item)"
-              />
+              <div v-else-if="item.total" v-html="item.total(scope.row, item)" />
               <div v-else>{{ scope.row[item.name] }}</div>
             </template>
           </el-table-column>
@@ -253,8 +216,14 @@ var elSlot = {
 }
 export default {
   name: 'TablePage',
-  components: { Pagination, elSlot, TableToolbar },
-  directives: { waves },
+  components: {
+    Pagination,
+    elSlot,
+    TableToolbar
+  },
+  directives: {
+    waves
+  },
   props: {
     options: {
       type: Object,
@@ -268,6 +237,8 @@ export default {
           where: {},
           // 默认请求数据
           data: {},
+          // 固定参数
+          params: {},
           // 标题
           title: '',
           // 列内容
@@ -316,6 +287,11 @@ export default {
   },
   methods: {
     reload(params) {
+      if (params) {
+        this.options.params = params
+      }
+      this.list = []
+      this.total = 0
       if (this.options.url) {
         this.loading = true
         if (this.options.where === undefined) {
@@ -325,36 +301,36 @@ export default {
         this.options.where.limit = this.options.limit
         this.options.where.PageIndex = this.options.page
         this.options.where.PageSize = this.options.limit
-        if (params) {
-          for (var item in params) {
-            this.options.where[item] = params[item]
+
+        if (this.options.params) {
+          for (var im in this.options.params) {
+            this.options.where[im] = this.options.params[im]
           }
         }
+
         this.$form(this.options.url, this.options.where)
           .then((res) => {
-            const { info } = res
+            this.options.page =
+                this.options.where.page || this.options.where.PageIndex
             this.loading = false
-            if (info.items) {
-              this.list = info.items
-              this.total = info.total
-            } else if (info.list) {
-              this.list = info.list
-              this.total = info.RecordCount
-              if (
-                info.data &&
-                this.options.cols.filter((c) => c.total).length > 0
-              ) {
-                this.tableData = [info.data]
+            if (res.info.items) {
+              this.list = res.info.items
+              this.total = res.info.total
+            } else if (res.info.list) {
+              this.list = res.info.list
+              this.total = res.info.RecordCount || this.list.length
+              if (res.info.data && this.options.cols.filter((c) => c.total).length > 0) {
+                this.tableData = [res.info.data]
               }
             } else {
-              this.list = info
-              this.total = info.length
+              this.list = res.info
+              this.total = res.info.length
             }
             if (this.options.done) {
               this.options.done(res)
             }
             this.$nextTick(() => {
-              this.$emit('success', info)
+              this.$emit('success', res.info)
             })
           })
           .catch(() => {
@@ -365,6 +341,12 @@ export default {
         this.$nextTick(() => {
           this.setSort()
         })
+      }
+    },
+    // 重置
+    reset() {
+      for (var item in this.options.where) {
+        this.options.where[item] = null
       }
     },
     // 排序方法
@@ -422,61 +404,74 @@ export default {
     },
     // 表格编辑事件
     handleInput(field, event) {
-      this.$emit('table-edit', { field: field, value: event.target.value })
+      this.$emit('table-edit', {
+        field: field,
+        value: event.target.value
+      })
     }
   }
 }
+
 </script>
 
 <style>
-.table-container {
-  padding: 10px;
-  background-color: white;
-  margin-top: 10px;
-}
-.table-title {
-  width: 200px;
-  position: absolute;
-}
-.table-title h3 {
-  color: rgba(0, 0, 0, 0.85);
-  font-weight: 500;
-  font-size: 16px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.table-toolbar {
-  padding: 5px;
-  background-color: #fafafa;
-  border-top: 1px solid #eee;
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
-}
-.sortable-ghost {
-  opacity: 0.8;
-  color: #fff !important;
-  background: #c2c2c2 !important;
-}
-.icon-star {
-  margin-right: 2px;
-}
-.drag-handler {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-.show-d {
-  margin-top: 15px;
-}
-.filter-container {
-  padding: 10px;
-  background-color: white;
-}
+  .table-container {
+    padding: 10px;
+    background-color: white;
+    margin-top: 10px;
+  }
 
-.filter-container .filter-item {
-  display: inline-block;
-  vertical-align: middle;
-}
+  .table-title {
+    width: 200px;
+    position: absolute;
+  }
+
+  .table-title h3 {
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+    font-size: 16px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .table-toolbar {
+    padding: 5px;
+    min-height: 40px;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+  }
+
+  .sortable-ghost {
+    opacity: 0.8;
+    color: #fff !important;
+    background: #c2c2c2 !important;
+  }
+
+  .icon-star {
+    margin-right: 2px;
+  }
+
+  .drag-handler {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .show-d {
+    margin-top: 15px;
+  }
+
+  .filter-container {
+    padding: 10px;
+    background-color: white;
+  }
+
+  .filter-container .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
 </style>
-

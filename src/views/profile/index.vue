@@ -7,12 +7,7 @@
 
       <div class="user-profile">
         <div class="box-center">
-          <pan-thumb
-            :image="Face"
-            :height="'100px'"
-            :width="'100px'"
-            :hoverable="false"
-          >
+          <pan-thumb :image="Face" :height="'100px'" :width="'100px'" :hoverable="false">
             <div>{{ NickName }}</div>
           </pan-thumb>
         </div>
@@ -21,11 +16,7 @@
           <div class="user-time text-center">~注册时间~：{{ CreateAt }}</div>
           <div class="user-role text-center text-muted" />
           <div class="user text-center">
-            <el-button
-              size="mini"
-              icon="el-icon-mobile-phone"
-              @click="handlePassword"
-            >~修改密码~</el-button>
+            <el-button size="mini" icon="el-icon-mobile-phone" @click="handlePassword">~修改密码~</el-button>
           </div>
         </div>
       </div>
@@ -41,17 +32,9 @@
                 <span class="item-label-title">~谷歌验证码~</span>
               </div>
               <div>
-                <el-button
-                  v-if="!Code"
-                  type="success"
-                  size="mini"
-                  icon="el-icon-mobile-phone"
-                  @click="handleCode"
-                >~绑定验证码~</el-button>
-                <span
-                  v-if="Code"
-                  class="el-text-green"
-                ><i class="el-icon-check" /> ~已绑定~</span>
+                <el-button v-if="!Code" type="success" size="mini" icon="el-icon-mobile-phone" @click="handleCode">
+                  ~绑定验证码~</el-button>
+                <span v-if="Code" class="el-text-green"><i class="el-icon-check" /> ~已绑定~</span>
               </div>
             </div>
           </div>
@@ -66,10 +49,6 @@
             <div class="progress-item">
               <span class="item-label-title">~用户名~：</span>
               <span>{{ UserName }}</span>
-            </div>
-            <div class="progress-item">
-              <span class="item-label-title">~权限分组~：</span>
-              <span>{{ GroupID }}</span>
             </div>
             <div class="progress-item">
               <span class="item-label-title">~最后登陆时间~：</span>
@@ -109,29 +88,19 @@
       :visible="passwordVisible"
       action="merchant/account/Password"
       :model="passwordInfo"
+      size="xs"
       @close="passwordVisible = false"
+      @submit="submit"
     >
       <template slot="form">
         <el-form-item label="~旧密码~">
-          <el-input
-            v-model="passwordInfo.OldPassword"
-            type="password"
-            placeholder="~请输入旧密码~"
-          />
+          <el-input v-model="passwordInfo.OldPassword" type="password" placeholder="~请输入旧密码~" />
         </el-form-item>
         <el-form-item label="~新密码~">
-          <el-input
-            v-model="passwordInfo.NewPassword"
-            type="password"
-            placeholder="~请输入新密码~"
-          />
+          <el-input v-model="passwordInfo.NewPassword" type="password" placeholder="~请输入新密码~" />
         </el-form-item>
         <el-form-item label="~确认密码~">
-          <el-input
-            v-model="passwordInfo.ConfirPassword"
-            type="password"
-            placeholder="~确认密码~"
-          />
+          <el-input v-model="passwordInfo.ConfirPassword" type="password" placeholder="~确认密码~" />
         </el-form-item>
       </template>
     </form-info>
@@ -139,11 +108,18 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {
+  mapGetters
+} from 'vuex'
 import PanThumb from '@/components/PanThumb'
+import {
+  validPassword
+} from '@/utils/validate'
 export default {
   name: 'Profile',
-  components: { PanThumb },
+  components: {
+    PanThumb
+  },
   data() {
     return {
       dialogVisible: false,
@@ -181,77 +157,98 @@ export default {
         if (res.success) {
           this.temp.Key = res.info.Key
           this.QRCode =
-            this.$store.state.settings.qrcode + '?content=' + res.info.Code
+              this.$store.state.settings.qrcode + '?content=' + res.info.Code
         } else {
-          this.$message({ message: res.msg, type: 'error' })
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
         }
       })
     },
     handlePassword() {
       this.passwordVisible = true
       this.passwordInfo = {}
+    },
+    submit(model, callback) {
+      if (!validPassword(this.passwordInfo.NewPassword)) {
+        this.$message({
+          type: 'error',
+          message: '~格式~:~大写字母~+~小写字母~+~数字~+~符号组合~，~长度不能低于~8~位~'
+        })
+        callback(false)
+      }
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
-.box-center {
-  margin: 0 auto;
-  display: table;
-}
-
-.text-muted {
-  color: #777;
-}
-
-.user-profile {
-  .user-name {
-    font-weight: bold;
-  }
-  .user-time {
-    font-size: 12px;
-    color: #606266;
-    padding-top: 5px;
-  }
   .box-center {
-    padding-top: 10px;
+    margin: 0 auto;
+    display: table;
   }
 
-  .user-role {
-    padding-top: 10px;
-    font-weight: 400;
-    font-size: 14px;
-  }
-}
-.item-label-title {
-  font-weight: 600;
-}
-.user-bio {
-  margin-top: 20px;
-  color: #606266;
-
-  span {
-    padding-left: 4px;
+  .text-muted {
+    color: #777;
   }
 
-  .user-bio-section {
-    font-size: 14px;
-    padding: 15px 0;
-    .user-section-item {
-      padding-bottom: 10px;
-      display: flex;
-      align-items: center;
-    }
-    .user-bio-section-header {
-      border-bottom: 1px solid #dfe6ec;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
+  .user-profile {
+    .user-name {
       font-weight: bold;
     }
+
+    .user-time {
+      font-size: 12px;
+      color: #606266;
+      padding-top: 5px;
+    }
+
+    .box-center {
+      padding-top: 10px;
+    }
+
+    .user-role {
+      padding-top: 10px;
+      font-weight: 400;
+      font-size: 14px;
+    }
   }
-}
-.progress-item {
-  padding-top: 20px;
-}
+
+  .item-label-title {
+    font-weight: 600;
+  }
+
+  .user-bio {
+    margin-top: 20px;
+    color: #606266;
+
+    span {
+      padding-left: 4px;
+    }
+
+    .user-bio-section {
+      font-size: 14px;
+      padding: 15px 0;
+
+      .user-section-item {
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .user-bio-section-header {
+        border-bottom: 1px solid #dfe6ec;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .progress-item {
+    padding-top: 20px;
+  }
+
 </style>
