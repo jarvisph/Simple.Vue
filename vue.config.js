@@ -49,8 +49,14 @@ module.exports = {
           "^/translate": 'translate'
         }
       },
+      ["^/utils"]: {
+        target: `http://localhost:5003`,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/utils": ''
+        }
+      },
     },
-    // after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

@@ -27,7 +27,7 @@ const state = {
 const mutations = {
   SET_USER: (state, info) => {
     state.NickName = info.NickName
-    state.Face = info.Face
+    state.Face = info.Face || 'utils/avatar?content=' + info.AdminName
     state.UserName = info.AdminName
     state.Code = info.Code
     state.CreateAt = info.CreateAt

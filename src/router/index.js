@@ -96,7 +96,7 @@ export const constantRoutes = [{
   component: Layout,
   hidden: false,
   meta: {
-    title: 'WebSocket',
+    title: '即时通信',
     icon: ''
   },
   children: [{
@@ -163,6 +163,51 @@ export const constantRoutes = [{
     hidden: false,
     meta: {
       title: '翻译内容',
+      icon: ''
+    }
+  }
+  ]
+},
+{
+  name: 'Utils',
+  path: '/utils',
+  alwaysShow: false,
+  component: Layout,
+  hidden: false,
+  meta: {
+    title: '实用工具',
+    icon: ''
+  },
+  children: [{
+    name: 'Utils.QRCode',
+    path: '/utils/qrcode',
+    alwaysShow: false,
+    component: () => import('@/views/utils/qrcode'),
+    hidden: false,
+    meta: {
+      title: '二维码生成',
+      icon: ''
+    }
+  },
+  {
+    name: 'Utils.Dingding',
+    path: '/utils/dingding',
+    alwaysShow: false,
+    component: () => import('@/views/utils/dingding'),
+    hidden: false,
+    meta: {
+      title: '钉钉机器人',
+      icon: ''
+    }
+  },
+  {
+    name: 'Utils.Telegram',
+    path: '/utils/telegram',
+    alwaysShow: false,
+    component: () => import('@/views/utils/telegram'),
+    hidden: false,
+    meta: {
+      title: '纸飞机机器人',
       icon: ''
     }
   }
