@@ -1,0 +1,15 @@
+@import './base.css';
+@media (min-width: 1024px) {
+
+}
+.el-main{height: calc(100vh - 60px);padding: 10px !important;}
+.el-aside{background: #001529;width:250px !important}
+.el-menu{border-right:none !important}
+.el-header{background-color: white;}
+.el-header .toolbar-container{display: flex;justify-content: space-between;height: 100%;align-items: center;}
+.layout-logo{height: 50px;}
+.layout-menu ul{background-color: #000c17;}
+.layout-menu .el-sub-menu__title:hover{background-color: transparent !important;}
+.layout-menu .el-sub-menu__title{color: white;}
+.layout-menu .el-menu-item{background-color: transparent !important;color: white;}
+.layout-menu .el-menu-item.is-active{background-color: #1890ff !important;color: white;}

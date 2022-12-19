@@ -1,106 +1,63 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div
-      v-if="device === 'mobile' && sidebar.opened"
-      class="drawer-bg"
-      @click="handleClickOutside"
-    />
-    <sidebar class="sidebar-container" />
-    <div :class="{ hasTagsView: needTagsView }" class="main-container">
-      <div :class="{ 'fixed-header': fixedHeader }">
-        <navbar />
-        <tags-view v-if="needTagsView" />
-      </div>
-      <app-main />
-      <!-- <right-panel v-if="showSettings">
-        <settings />
-      </right-panel> -->
-    </div>
-  </div>
+  <el-container>
+    <el-aside>
+      <el-scrollbar>
+        <div class="layout-logo"></div>
+        <div class="layout-menu">
+          <el-menu :default-openeds="[]">
+            <el-sub-menu index="1">
+              <template #title>
+                <el-icon><message /></el-icon>Navigator One
+              </template>
+              <el-menu-item-group>
+                <template #title>Group 1</template>
+                <el-menu-item index="1-1">Option 1</el-menu-item>
+                <el-menu-item index="1-2">Option 2</el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group title="Group 2">
+                <el-menu-item index="1-3">Option 3</el-menu-item>
+              </el-menu-item-group>
+              <el-sub-menu index="1-4">
+                <template #title>Option4</template>
+                <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
+              </el-sub-menu>
+            </el-sub-menu>
+          </el-menu>
+        </div>
+      </el-scrollbar>
+    </el-aside>
+
+    <el-container>
+      <el-header>
+        <div class="toolbar-container">
+          <div></div>
+          <div>
+            <el-avatar
+              :size="30"
+              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            />
+            <span>用户名</span>
+          </div>
+        </div>
+      </el-header>
+
+      <el-main>
+        <el-scrollbar>
+          <router-view></router-view>
+        </el-scrollbar>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
-<script>
-// import RightPanel from '@/components/RightPanel'
-import { AppMain, Navbar, Sidebar, TagsView } from './components'
-import ResizeMixin from './mixin/ResizeHandler'
-import { mapState } from 'vuex'
+<script lang="ts" setup>
+import { ref } from "vue";
+import { Menu as IconMenu, Message } from "@element-plus/icons-vue";
 
-export default {
-  name: 'Layout',
-  components: {
-    AppMain,
-    Navbar,
-    // RightPanel,
-    // Settings,
-    Sidebar,
-    TagsView
-  },
-  mixins: [ResizeMixin],
-  computed: {
-    ...mapState({
-      sidebar: (state) => state.app.sidebar,
-      device: (state) => state.app.device,
-      showSettings: (state) => state.settings.showSettings,
-      needTagsView: (state) => state.settings.tagsView,
-      fixedHeader: (state) => state.settings.fixedHeader
-    }),
-    classObj() {
-      return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
-      }
-    }
-  },
-  methods: {
-    handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    }
-  }
-}
+const item = {
+  date: "2016-05-02",
+  name: "Tom",
+  address: "No. 189, Grove St, Los Angeles",
+};
+const tableData = ref(Array.from({ length: 50 }).fill(item));
 </script>
-
-<style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-@import "~@/styles/variables.scss";
-
-.app-wrapper {
-  @include clearfix;
-  position: relative;
-  height: 100%;
-  width: 100%;
-
-  &.mobile.openSidebar {
-    position: fixed;
-    top: 0;
-  }
-}
-
-.drawer-bg {
-  background: #000;
-  opacity: 0.3;
-  width: 100%;
-  top: 0;
-  height: 100%;
-  position: absolute;
-  z-index: 999;
-}
-
-.fixed-header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9;
-  width: calc(100% - #{$sideBarWidth});
-  transition: width 0.28s;
-}
-
-.hideSidebar .fixed-header {
-  width: calc(100% - 54px);
-}
-
-.mobile .fixed-header {
-  width: 100%;
-}
-</style>
