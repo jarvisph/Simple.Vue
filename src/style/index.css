@@ -1,0 +1,27 @@
+
+@import '../amui/css/amazeui.css';
+
+body {min-height: 100vh;color: var(--el-color-info-dark-2);margin: 0;background-color: #f5f5f5;}
+
+.width-100{width: 100%;}
+.width-50{width: 50% !important;}
+
+/*原生组件样式*/
+.el-button--small{padding:5px !important;--el-button-size: 20px !important;}
+/*布局模块*/
+.el-main{height: calc(100vh - 60px);padding: 10px !important;}
+.el-aside{width:auto !important;background-color: #000c17;}
+.el-menu{border-right:none !important}
+.el-header{background-color: white;box-shadow: 0 1px 4px rgb(0 21 41 / 8%);}
+.el-header .toolbar-container{display: flex;justify-content: space-between;height: 100%;align-items: center;}
+.el-header .el-dropdown-link {cursor: pointer;color: var(--el-menu-text-color);}
+.layout-logo{height: 50px;text-align: center;line-height: 50px;background: #001529;}
+.layout-logo .title{color: white;font-weight: 500;}
+.layout-menu ul{background-color: #000c17;}
+.layout-menu .el-sub-menu__title:hover{background-color: transparent !important;}
+.layout-menu .el-sub-menu__title{color: white;}
+.layout-menu .el-menu-item{background-color: transparent !important;color: white;}
+.layout-menu .el-menu-item.is-active{background-color: #1890ff !important;color: white;}
+
+/*table模块*/
+.el-table tr th{ padding: 5px; background-color: #f1f1f1;background-image: linear-gradient(180deg, #fff, #f1f1f1);}
