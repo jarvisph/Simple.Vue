@@ -1,4 +1,17 @@
 <template>
+  <div class="el-table-search">
+    <el-form :model="props.where">
+      <slot name="search"></slot>
+      <div class="toolbar">
+        <el-button type="primary" @click="onSearch"> 查询 </el-button>
+        <el-button native-type="reset" @click="onReset"> 重置 </el-button>
+      </div>
+    </el-form>
+  </div>
+  <!--工具栏-->
+  <div class="el-table-toolbar">
+    <slot name="toolbar"></slot>
+  </div>
   <el-table
     v-loading="state.loading"
     element-loading-text="拼命加载中"
@@ -95,8 +108,7 @@
 import { reactive, onMounted, nextTick, ref, getCurrentInstance } from "vue";
 import Sortable from "sortablejs";
 import toolbar from "./toolbar.vue";
-
-const proxy = getCurrentInstance();
+import search from "./search.vue";
 
 const props = defineProps({
   options: {
@@ -121,7 +133,9 @@ const props = defineProps({
       };
     },
   },
+  where: Object,
 });
+
 const state = reactive({
   data: props.options.data,
   loading: false,
@@ -129,9 +143,6 @@ const state = reactive({
   pageSize: 20,
   total: 100,
 });
-
-// 存储dom数组
-const myRef = ref(null);
 
 const onSizeChange = () => {};
 const onCurrentChange = () => {};
@@ -157,6 +168,14 @@ const setSort = () => {
   });
 };
 
+const onSearch = () => {
+  console.log(props.where);
+};
+const onReset = () => {
+  for (var item in props.where) {
+    props.where[item] = null;
+  }
+};
 onMounted(() => {
   nextTick(() => {
     setSort();
@@ -165,11 +184,6 @@ onMounted(() => {
 </script>
 
 <style>
-.el-table-pagination {
-  background-color: white;
-  padding: 10px;
-}
-
 .sortable-ghost {
   opacity: 0.8;
   color: #fff !important;

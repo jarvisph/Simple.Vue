@@ -6,8 +6,21 @@ body {min-height: 100vh;color: var(--el-color-info-dark-2);margin: 0;background-
 .width-100{width: 100%;}
 .width-50{width: 50% !important;}
 
+.w100{width: 100px !important;}
+.w150{width: 150px !important;}
+.w200{width: 200px !important;}
+.w250{width: 250px !important;}
+
+.text-right{text-align: right;}
 /*原生组件样式*/
 .el-button--small{padding:5px !important;--el-button-size: 20px !important;}
+.el-table-pagination {background-color: white;padding: 10px;}
+.el-table-search {background-color: white;padding: 10px;margin-bottom: 10px;}
+.el-table-search .toolbar{display: initial;margin-left: 10px;}
+.el-table-toolbar {background-color: white;text-align: right;padding: 10px;}
+.el-form-info .el-dialog__header{margin-right:0;border-bottom: 1px solid #eee;}
+.el-form-info .el-dialog__footer{box-shadow:  0px 12px 32px 4px rgba(0, 0, 0, .04),0px 8px 20px rgba(0, 0, 0, .08);}
+.el-form-info .el-dialog__body .el-scrollbar{height: calc(100vh - 400px) !important;}
 /*布局模块*/
 .el-main{height: calc(100vh - 60px);padding: 10px !important;}
 .el-aside{width:auto !important;background-color: #000c17;}
