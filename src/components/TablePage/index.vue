@@ -1,5 +1,5 @@
 <template>
-  <div class="el-table-search">
+  <div class="el-table-search" v-if="props.search">
     <el-form :model="props.where">
       <slot name="search"></slot>
       <div class="toolbar">
@@ -20,11 +20,13 @@
     :data="state.data"
     :stripe="true"
     :border="true"
+    :summary-method="SummaryMethod"
+    :show-summary="props.options.total ? true : false"
     ref="table"
     size="small"
     class="width-100"
   >
-    <template v-for="(item, index) in props.options.cols">
+    <template v-for="item in props.options.cols">
       <!--多选列-->
       <template v-if="item.type === 'checkbox'">
         <el-table-column
@@ -90,14 +92,14 @@
       </template>
     </template>
   </el-table>
-  <div class="el-table-pagination">
+  <div class="el-table-pagination" v-if="props.page">
     <el-pagination
       v-model:current-page="state.currentPage"
       v-model:page-size="state.pageSize"
       :page-sizes="[20, 100, 200, 500, 1000]"
       :small="false"
       layout=" sizes,total, prev, pager, next, jumper"
-      :total="400"
+      :total="state.total"
       @size-change="onSizeChange"
       @current-change="onCurrentChange"
     />
@@ -105,27 +107,20 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, nextTick, ref, getCurrentInstance } from "vue";
+import { reactive, onMounted, nextTick } from "vue";
+import type { TableColumnCtx } from "element-plus";
 import Sortable from "sortablejs";
 import toolbar from "./toolbar.vue";
-import search from "./search.vue";
-
+import { sum } from "lodash";
+const emit = defineEmits(["on-edit"]);
 const props = defineProps({
   options: {
     type: Object,
     default: function () {
       return {
-        //搜索框
-        search: true,
-        //搜索开启分页
-        page: true,
         //远程数据
         url: "",
         elem: "",
-        //条件搜索参数
-        where: {},
-        //数据集
-        data: [],
         // 固定参数
         params: {},
         // 列内容
@@ -134,26 +129,47 @@ const props = defineProps({
     },
   },
   where: Object,
+  data: Array,
+  search: {
+    type: Boolean,
+    default: true,
+  },
+  page: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const state = reactive({
-  data: props.options.data,
+  data: props.data,
   loading: false,
   currentPage: 1,
   pageSize: 20,
-  total: 100,
+  total: props.data ? props.data.length : 0,
 });
 
 const onSizeChange = () => {};
 const onCurrentChange = () => {};
 
+interface SummaryMethodProps<T> {
+  columns: TableColumnCtx<T>[];
+  data: T[];
+}
+
+const SummaryMethod = () => {
+  const sums: string[] = [];
+  props.options.total.forEach((item: Object) => {
+    sums.push(item.title);
+  });
+  return sums;
+};
 const setSort = () => {
   var elem = ".el-table__body tbody";
   if (props.options.elem) {
     elem = `.${props.options.elem} ${elem}`;
   }
   const el = document.querySelector(elem);
-  const sortable = Sortable.create(el, {
+  Sortable.create(el, {
     handle: ".drag-handler",
     ghostClass: "sortable-ghost", // Class name for the drop placeholder,
     onEnd: (evt: Sortable.SortableEvent) => {
@@ -176,6 +192,14 @@ const onReset = () => {
     props.where[item] = null;
   }
 };
+
+const onEditInput = (field, event) => {
+  emit("on-edit", {
+    field: field,
+    value: event.target.value,
+  });
+};
+
 onMounted(() => {
   nextTick(() => {
     setSort();

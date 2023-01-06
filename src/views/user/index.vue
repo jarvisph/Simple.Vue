@@ -1,5 +1,5 @@
 <template>
-  <TablePage :options="table" :where="state.where">
+  <TablePage :options="table" :data="state.data" :where="state.where">
     <template #search>
       <el-input
         class="w200"
@@ -49,6 +49,7 @@
     <el-form-item label="Activity form">
       <el-input v-model="form.desc" type="textarea" />
     </el-form-item>
+    <Translate :data="form.lang"></Translate>
   </FormInfo>
 </template>
 
@@ -56,6 +57,7 @@
 import { reactive } from "vue";
 import TablePage from "@/components/TablePage/index.vue";
 import FormInfo from "@/components/FormInfo/index.vue";
+import Translate from "@/components/Translate/index.vue";
 
 const form = reactive({
   name: "",
@@ -64,6 +66,7 @@ const form = reactive({
   date2: "",
   delivery: false,
   type: [],
+  lang: { CHN: "你好", THN: "你好" },
   resource: "",
   desc: "",
 });
@@ -74,46 +77,6 @@ const state = reactive({
     UserName: undefined,
   },
   visible: false,
-});
-const table = {
-  where: {
-    UserName: undefined,
-  },
-  cols: [
-    {
-      type: "sort",
-      width: 50,
-      event: (data: []) => {
-        console.log(data);
-      },
-    },
-    { type: "checkbox", width: 50 },
-    { type: "index", title: "编号", width: 50 },
-    { name: "date", title: "日期", width: 150, tip: "日期可筛选" },
-    { name: "name", title: "名称", width: 100 },
-    { name: "state", title: "状态", width: 100 },
-    {
-      title: "地址",
-      cols: [
-        { name: "city", title: "市" },
-        { name: "address", title: "详细地址" },
-      ],
-    },
-    {
-      type: "toolbar",
-      title: "操作",
-      template: [
-        { type: "delete", title: "删除" },
-        {
-          type: "edit",
-          title: "编辑",
-          event: () => {
-            state.visible = true;
-          },
-        },
-      ],
-    },
-  ],
   data: [
     {
       date: "2016-05-01",
@@ -151,7 +114,62 @@ const table = {
       zip: "CA 90036",
       tag: "Office",
     },
+    {
+      date: "2016-05-05",
+      name: "Tom",
+      state: "California",
+      city: "Los Angeles",
+      address: "No. 189, Grove St, Los Angeles",
+      zip: "CA 90036",
+      tag: "Office",
+    },
   ],
+});
+const table = {
+  where: {
+    UserName: undefined,
+  },
+  cols: [
+    {
+      type: "sort",
+      width: 50,
+      event: (data: []) => {
+        console.log(data);
+      },
+    },
+    { type: "checkbox", width: 50 },
+    { type: "index", title: "编号", width: 50 },
+    { name: "date", title: "日期", width: 150, tip: "日期可筛选", sort: true },
+    { name: "name", title: "名称", width: 100 },
+    {
+      name: "state",
+      title: "状态",
+      width: 100,
+      filters: [{ text: "正常", value: "California" }],
+    },
+    {
+      title: "地址",
+      cols: [
+        { name: "city", title: "市" },
+        { name: "address", title: "详细地址" },
+      ],
+    },
+    {
+      type: "toolbar",
+      title: "操作",
+      template: [
+        { type: "delete", title: "删除" },
+        {
+          type: "edit",
+          title: "编辑",
+          event: () => {
+            state.visible = true;
+          },
+        },
+      ],
+    },
+  ],
+  total: [{ title: "统计" }],
 };
 
 const onSubmit = () => {};
