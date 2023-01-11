@@ -26,11 +26,8 @@ service.interceptors.response.use(
     if (res.success) {
       return res;
     } else {
-      const code = res.info ? res.info.ErrorType : "ERROR";
-      if (res.msg === "No Login") {
+      if (res.info.code=="Login") {
         localStorage.removeItem("TOKEN");
-        router.push({ path: "/login" });
-      } else if (code) {
         router.push({ path: "/login" });
       }
       return res;
@@ -47,7 +44,7 @@ service.interceptors.response.use(
 );
 
 export default {
-  form({ url, data, method = "post", resType = "text" }) {
+  form({ url="", data={}, method = "post", resType = "text" }) {
     return service({
       url: url,
       method: method,

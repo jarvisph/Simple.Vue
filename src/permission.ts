@@ -4,6 +4,7 @@ import { GlobalStore } from "@/stores/global";
 router.beforeEach(async (to, from, next) => {
   const user = UserStore();
   const global = GlobalStore();
+  global.UpdateLayoutLoadding(true)
   const token = localStorage.getItem("TOKEN");
   if (token) {
     if (to.name === "login") {
@@ -28,4 +29,7 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-router.afterEach(() => {});
+router.afterEach(() => {
+  const global = GlobalStore();
+  global.UpdateLayoutLoadding(false)
+});

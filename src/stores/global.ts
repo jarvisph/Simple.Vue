@@ -12,14 +12,18 @@ export const GlobalStore = defineStore({
         return {
             Layout: {
                 Collapse: false,
-                Title: '管理系统'
+                Loadding:false,
+                Title: 'Vue 3.0'
             },
-            Language: language
+            Language: language,
         }
     },
     actions: {
         UpdateLayoutCollapse() {
             this.Layout.Collapse = !this.Layout.Collapse
+        },
+        UpdateLayoutLoadding(loadding:boolean){
+            this.Layout.Loadding=loadding
         }
     }
 })

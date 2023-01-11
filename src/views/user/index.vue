@@ -6,6 +6,8 @@
         v-model="state.where.UserName"
         placeholder="请输入用户名"
       />
+      <DataGroup start-time="2023-01-01"></DataGroup>
+      <SelectData :data="options" value="1"></SelectData>
     </template>
     <template #toolbar>
       <el-button type="primary" @click="state.visible = true"
@@ -58,7 +60,8 @@ import { reactive } from "vue";
 import TablePage from "@/components/TablePage/index.vue";
 import FormInfo from "@/components/FormInfo/index.vue";
 import Translate from "@/components/Translate/index.vue";
-
+import DataGroup from "@/components/DateGroup/index.vue"
+import SelectData from "@/components/SelectData/index.vue"
 const form = reactive({
   name: "",
   region: "",
@@ -70,7 +73,11 @@ const form = reactive({
   resource: "",
   desc: "",
 });
-
+const options=new Map();
+options.set("1","Online activities")
+options.set("2","Promotion activities")
+options.set("3","Offline activities")
+options.set("4","Simple brand exposure")
 const where = reactive({});
 const state = reactive({
   where: {
