@@ -1,10 +1,10 @@
 import router from "./router";
+import { start,close } from "./utils/nprogress";
 import { UserStore } from "@/stores/user";
-import { GlobalStore } from "@/stores/global";
+
 router.beforeEach(async (to, from, next) => {
+  start()
   const user = UserStore();
-  const global = GlobalStore();
-  global.UpdateLayoutLoadding(true)
   const token = localStorage.getItem("TOKEN");
   if (token) {
     if (to.name === "login") {
@@ -30,6 +30,5 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach(() => {
-  const global = GlobalStore();
-  global.UpdateLayoutLoadding(false)
+ close()
 });

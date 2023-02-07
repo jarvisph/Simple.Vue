@@ -70,7 +70,9 @@ const form = reactive({
   Password: "",
   Code: "",
 });
-const verify = () => {};
+const verify = () => {
+  
+};
 watch(
   () => form.UserName,
   () => {

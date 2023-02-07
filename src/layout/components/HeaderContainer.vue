@@ -3,8 +3,11 @@
     <div>
       <el-icon class="el-dropdown-link" @click="global.UpdateLayoutCollapse">
         <Expand v-if="global.Layout.Collapse" />
-        <Fold v-else
-      /></el-icon>
+        <Fold v-else />
+      </el-icon>
+      <el-icon class="el-dropdown-link" @click="onRefresh">
+        <RefreshRight />
+      </el-icon>
     </div>
     <div>
       <el-dropdown @command="onChange">
@@ -19,9 +22,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-            <el-dropdown-item command="logout" divided
-              >退出登录</el-dropdown-item
-            >
+            <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -30,20 +31,45 @@
 </template>
 
 <script lang="ts" setup>
-import { GlobalStore } from "@/stores/global";
-import { Fold, Expand } from "@element-plus/icons-vue";
-import { useRouter } from "vue-router";
-import { UserStore } from "@/stores/user";
-const router = useRouter();
-const user = UserStore();
-const global = GlobalStore();
-const onChange = (command: string | number | object) => {
-  switch (command) {
-    case "profile":
-      router.push({ path: command });
+  import {
+    GlobalStore
+  } from "@/stores/global";
+  import {
+    Fold,
+    Expand,
+    RefreshRight
+  } from "@element-plus/icons-vue";
+  import {
+    useRouter
+  } from "vue-router";
+  import {
+    UserStore
+  } from "@/stores/user";
+  import {
+    nextTick
+  } from "vue";
+  const router = useRouter();
+  const user = UserStore();
+  const global = GlobalStore();
+  const onChange = (command: string | number | object) => {
+    switch (command) {
+      case "profile":
+        router.push({
+          path: command
+        });
+        break;
+      case "logout": {
+        user.Logout()
+        router.push({
+          path: '/login'
+        })
+      }
       break;
-    case "logout":
-      break;
+    }
+  };
+  const onRefresh = () => {
+      router.replace({
+        path:"redirect"+ router.currentRoute.value.fullPath
+      })
   }
-};
 </script>

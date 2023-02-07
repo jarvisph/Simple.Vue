@@ -18,6 +18,9 @@ export const UserStore = defineStore({
         GetInfo() {
             this.Menus = []
             this.Menus.push(new MenuItem({ name: "user", title: '会员管理', icon: "am-icon-user" }, [new MenuItem({ name: "user", title: "会员列表", path: "/user" })]))
+        },
+        Logout(){
+            
         }
     }
 })

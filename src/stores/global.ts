@@ -12,7 +12,6 @@ export const GlobalStore = defineStore({
         return {
             Layout: {
                 Collapse: false,
-                Loadding:false,
                 Title: 'Vue 3.0'
             },
             Language: language,
@@ -22,8 +21,5 @@ export const GlobalStore = defineStore({
         UpdateLayoutCollapse() {
             this.Layout.Collapse = !this.Layout.Collapse
         },
-        UpdateLayoutLoadding(loadding:boolean){
-            this.Layout.Loadding=loadding
-        }
     }
 })
