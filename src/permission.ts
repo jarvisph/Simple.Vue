@@ -1,14 +1,17 @@
 import router from "./router";
-import { start,close } from "./utils/nprogress";
 import { UserStore } from "@/stores/user";
+import NProgress from 'accessible-nprogress'
+import "accessible-nprogress/dist/accessible-nprogress.css"
+
 
 router.beforeEach(async (to, from, next) => {
-  start()
+  NProgress.start()
   const user = UserStore();
   const token = localStorage.getItem("TOKEN");
   if (token) {
     if (to.name === "login") {
       next("/");
+      NProgress.done()
     } else {
       if (user.Info.ID) {
         next();
@@ -23,6 +26,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     if (to.meta.login) {
       next(`/login?redirect=${to.path}`);
+      NProgress.done()
     } else {
       next();
     }
@@ -30,5 +34,5 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach(() => {
- close()
+  NProgress.done()
 });

@@ -25,6 +25,17 @@ body {min-height: 100vh;color: var(--el-color-info-dark-2);margin: 0;background-
 .el-form-info .el-dialog__body .el-scrollbar{height: calc(100vh - 400px) !important;}
 .el-form-info .el-dialog__body .el-form{padding: 50px;}
 .el-form-info label{font-weight:normal}
+
+.el-dialog-info {border-radius:10px;}
+.el-dialog-info .el-dialog__body{padding: 0 0 0 0 !important;}
+.el-dialog-info .el-tabs__item{height: 80px;}
+.el-dialog-info .diag-header{height: 50px;}
+.el-dialog-info .el-dialog__header{border-radius: 10px 10px 0 0; background-color:#409eff !important;}
+.el-dialog-info .el-dialog__title{color: #fff;}
+.el-dialog-info .el-dialog__close{color: #fff;}
+.el-dialog-info .el-tabs--border-card{border: none;}
+.el-dialog-info .el-dialog__body .el-tabs__item {width: 100px;height: 60px; text-align: center;  border-top-left-radius:10px; border-top-right-radius:10px;color:#fff !important;}
+
 /*布局模块*/
 .el-main{height: calc(100vh - 60px);padding: 10px !important;}
 .el-aside{width:auto !important;background-color: #000c17;}

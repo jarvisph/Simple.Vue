@@ -1,11 +1,11 @@
 <template>
   <div class="toolbar-container">
-    <div>
-      <el-icon class="el-dropdown-link" @click="global.UpdateLayoutCollapse">
+    <div style="display: flex;width: 50px;justify-content: space-between;">
+      <el-icon :size="20" class="el-dropdown-link" @click="global.UpdateLayoutCollapse">
         <Expand v-if="global.Layout.Collapse" />
         <Fold v-else />
       </el-icon>
-      <el-icon class="el-dropdown-link" @click="onRefresh">
+      <el-icon :size="20" class="el-dropdown-link" @click="onRefresh">
         <RefreshRight />
       </el-icon>
     </div>
