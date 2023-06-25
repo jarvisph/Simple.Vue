@@ -176,7 +176,7 @@ const table = {
       ],
     },
   ],
-  total: [{ title: "统计" }],
+  total: [{ title: "统计" },null,null,null,null,{template:(d:any)=>{return d.BetMoney}}],
 };
 
 const onSubmit = () => {};
